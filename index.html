@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Progress Bars</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <p>Note: This is the old version. The new version is still in progress, but can he accessed <a href="index2.html">here</a>.</p>
+    <div class="container-fluid">
+      <div class="row" style="margin-right:.1em;margin-left:.1em;">
+        <div class="col-md-6" style="margin-top: 2em;">
+          <div class="form-group">
+            <label for="done">Done:</label>
+            <input type="text" class="form-control" id="done" onkeypress="return isNumber(event)" placeholder="50">
+          </div>
+        </div>
+        <div class="col-md-6" style="margin-top: 2em;">
+          <div class="form-group">
+            <label for="outOf">Out of:</label>
+            <input type="text" class="form-control" id="outOf" onkeypress="return isNumber(event)" placeholder="100">
+          </div>
+        </div>
+      </div>
+      <br><br><br>
+      <div class="col-md-12">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:50%;">
+            <p><span class="value">50</span>%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 
+    Planned features:
+     -create progress bars as objects with a constructor function
+       -each bar will have:
+          -id (this will be a number that can be swapped with other bars to create orders)
+          -title (displayed as a header element above the bar and it's inputs)
+          -color (underline (or maybe text color) of the title, as well as determining the color of the input and progress bar through warning/info/etc.)
+          -out of
+          -done
+     -store the progress bar objects in cookies for happiness
+     -make progress bars collapsible
+       -arrows by the bar titles that toggle css properties display and visibility between block/shown and none/hidden
+     -->
+    <script type="text/javascript">
+      function getValue() {
+        var done = $('#done').val();
+        var outOf = $('#outOf').val();
+        if (done >= 0 && outOf > 0) {
+          var value = 1000 * done / outOf;
+          value = Math.round(value);
+          value = value * .1;
+          value = value.truncate(1);
+          if (value <= 100) {
+            return value;
+          }
+          return 100;
+        } else if (done > 0) {
+          if (done === 0) {
+            return 0;
+          } else if (done == 0) {
+            return 50 / outOf;
+          }
+          var value = 1000 * done / 100;
+          value = Math.round(value);
+          value = value * .1;
+          value = value.truncate(1);
+          if (value <= 100) {
+            return value;
+          }
+          return 100;
+        } else if (outOf > 0) {
+          var value = 1000 * 50 / outOf;
+          value = Math.round(value);
+          value = value * .1;
+          value = value.truncate(1);
+          if (value <= 100) {
+            return value;
+          }
+          return 100;
+        }
+        return 50;
+      }
+
+      function updateBar() {
+        $('.progress-bar').attr("style", "width:" + getValue() + "%;");
+        $('.value').html(getValue());
+      }
+
+      function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+          return false;
+        }
+        return true;
+      }
+
+      Number.prototype.truncate = function(digits) {
+        var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+          m = this.toString().match(re);
+        return m ? parseFloat(m[1]) : this.valueOf();
+      };
+
+      $('input').keyup(updateBar);
+
+    </script>
+  </body>
+
+</html>
