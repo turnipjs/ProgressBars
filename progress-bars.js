@@ -33,13 +33,15 @@ function update() {
     value = Math.round(value);
     value = value * .1;
     // updates object
-    eval("bar" + barID + ".barName = $('.name " + barID + "').val();");
+    eval("bar" + barID + ".barName = $('.barNameInput " + barID + "').val();");
     eval("bar" + barID + ".outOf = $('.outOf " + barID + "').val();");
     eval("bar" + barID + ".done = $('.done " + barID + "').val();");
     eval("bar" + barID + ".color = $('.color " + barID + "').val();");
     // updates html
-    $(".progress-bar " + barID).attr("style", "width:" + value + "%;");
-    $(".value " + barID).html(value);
+    $(".progress-bar " + barID).attr("style", "width:" + value + "%;"); //bar
+    $(".progress-bar " + barID).html(value + "%"); //bar
+    $(".barName " + barID).html($(".barNameInput" + barID).val()); //bar name
+
     // updates cookies
     // [TO BE CREATED], cookies hav not been implemented at all
   }
@@ -54,6 +56,7 @@ function getNewBarID(counter) {
     return i;
   }
 }
+
 // done
 function Bar() {
   this.barName = "Rename Me!";
@@ -61,6 +64,7 @@ function Bar() {
   this.done = null;
   this.color = "primary";
 }
+
 // done
 function createBar() {
   var newBarID = getNewBarID();
@@ -69,6 +73,17 @@ function createBar() {
   $("#bars").append(createBarHTML(newBarID));
 }
 
+// function for x buttons to run with their id onclick
+function identifyBar(barID) {
+  // [TO BE CREATED]
+}
+
+// function run to remove bars run on mouseup
+function removeBar() {
+  // [TO BE CREATED]
+}
+
+// done
 function isNumber(evt) {
   evt = (evt) ? evt : window.event;
   var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -78,7 +93,6 @@ function isNumber(evt) {
   return true;
 }
 
-// done
 //runs after page is fully loaded (acts like a "$(document).ready(function(){})")
 $(function() {
   // init page
@@ -88,5 +102,6 @@ $(function() {
   // jquery listners
   $("input").keyup(update());
   $("#add-a-bar").click(createBar()); //listens to + button and creates new bars
-  $(); //listens to x buttons and deletes that bar when it is pressed
+  $(".remove-bar").mouseup(removeBar()); //listens to x buttons and deletes that bar when it is pressed
+  $(".colorSelector").change(update());
 });
